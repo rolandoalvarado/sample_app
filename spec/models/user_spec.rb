@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe User do
 
-  before { @user = User.new(name: "Example User", email: "user@example.com", 
+  before { @user = User.new(name: "Test User", email: "test@example.com", 
                             password: "test123", password_confirmation: "test123") }
 
   subject { @user }
@@ -12,6 +12,8 @@ describe User do
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
+  it { should respond_to(:remember_token) }
+  it { should respond_to(:authenticate) }
 
   it { should be_valid }  
 
@@ -104,10 +106,15 @@ describe User do
   end
   
   describe "profile page" do
-    before { visit user_path(user) }
+    before { visit user_path(@user) }
 
-    it { should have_content(user.name) }
-    it { should have_title(user.name) } 
+    it { should have_content(@user.name) }
+    it { should have_title(@user.name) } 
+  end
+
+  describe "remember token" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
   end
 
 end
